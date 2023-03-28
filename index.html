@@ -5,8 +5,10 @@
 	</title>
 </head>
 <body>
-	<h1 id='tm' style="text-align: center"></h1>
-	<h1 id='rem' style="text-align: center"></h1>
+	<div style="font-size: 3.6em; position: fixed; top: 0; bottom: 0; left: 0; right: 0;">
+		<h1 id='tm' style="text-align: center"></h1>
+		<h1 id='rem' style="text-align: center"></h1>
+	</div>
 	<script>
 		function dateToString(t) {
 			Date.prototype.format = function (fmt) {
@@ -27,10 +29,10 @@
 						fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
 					}
 				}
-				return fmt
+				return fmt;
 			}
-			let cur = new Date(t).format("yyyy 年 MM 月 dd 日 hh 时 mm 分 ss 秒")
-			return cur.toString()
+			let cur = new Date(t).format("yyyy-MM-dd hh:mm:ss");
+			return cur.toString();
 		}
 		function timeToString(t) {
 			Date.prototype.format = function (fmt) {
@@ -47,15 +49,49 @@
 						fmt = fmt.replace(RegExp.$1, o[k]);
 					}
 				}
-				return fmt
+				return fmt;
 			}
-			let cur = new Date(t).format("y M d h m s")
-			return cur.toString()
+			let cur = new Date(t).format("y M d h m s");
+			return cur.toString();
 		}
-		function updateTime(){
-			let cur = new Date();
-			document.getElementById("tm").innerHTML = "现在时间：" + dateToString(cur);
-			document.getElementById("rem").innerHTML = "距离联合省选开始还有" + timeToString(Number(new Date("2023-4-1 8:30")) - Number(cur)) + "。";
+		const contestName = "联合省选", daysCount = 2;
+		const daysTime = [
+			[
+				'2023-4-1 8:30:00',
+				'2023-4-1 13:30:00'
+			],[
+				'2023-4-2 8:30:00',
+				'2023-4-2 13:30:00'
+			]
+		];
+		function timeToNumber(t) {
+			return Number(new Date(t));
+		}
+		function updateTime() {
+			let cur = Number(new Date()), rem = "";
+			document.getElementById("tm").innerHTML = "现在时间：<br/>" + dateToString(cur);
+			try {
+				if (cur <= timeToNumber(daysTime[0][0])) {
+					rem = "距离 " + contestName + " 开始还有<br/>" + timeToString(timeToNumber(daysTime[0][0]) - cur) + "。";
+				}
+				if (cur > timeToNumber(daysTime[daysCount - 1][0])) {
+					throw "Contest ended.";
+				}
+				for (let i = 0; i < daysCount; i++) {
+					if (cur > timeToNumber(daysTime[i][0]) && cur <= timeToNumber(daysTime[i][1])) {
+						rem = "距离 " + contestName + " Day " + (i + 1) + " 结束还有<br/>" + timeToString(timeToNumber(daysTime[i][1]) - cur) + "。";
+					}
+				}
+				for (let i = 1; i < daysCount; i++) {
+					if (cur > timeToNumber(daysTime[i - 1][1]) && cur <= timeToNumber(daysTime[i][0])) {
+						rem = "距离 " + contestName + " Day " + (i + 1) + " 开始还有<br/>" + timeToString(timeToNumber(daysTime[i][0]) - cur) + "。";
+					}
+				}
+			} catch(e) {
+				console.log(e);
+				rem = "目前无法进行任何操作。";
+			}
+			document.getElementById("rem").innerHTML = rem; 
 		}
 		setInterval(updateTime, 233);
 	</script>
