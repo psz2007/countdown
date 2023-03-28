@@ -1,0 +1,62 @@
+<head>
+	<meta charset=utf-8>
+	<title>
+		联合省选倒计时
+	</title>
+</head>
+<body>
+	<h1 id='tm' style="text-align: center"></h1>
+	<h1 id='rem' style="text-align: center"></h1>
+	<script>
+		function dateToString(t) {
+			Date.prototype.format = function (fmt) {
+				let o = {
+					"M+": this.getMonth() + 1,
+					"d+": this.getDate(),
+					"h+": this.getHours(),
+					"m+": this.getMinutes(),
+					"s+": this.getSeconds(),
+					"q+": Math.floor((this.getMonth() + 3) / 3),
+					"S": this.getMilliseconds()
+				};
+				if (/(y+)/.test(fmt)) {
+					fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+				}
+				for (let k in o) {
+					if (new RegExp("(" + k + ")").test(fmt)) {
+						fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+					}
+				}
+				return fmt
+			}
+			let cur = new Date(t).format("yyyy 年 MM 月 dd 日 hh 时 mm 分 ss 秒")
+			return cur.toString()
+		}
+		function timeToString(t) {
+			Date.prototype.format = function (fmt) {
+				let o = {
+					"y+": this.getYear() > 70 ? (this.getYear() - 70) + " 年" : "",
+					"M+": this.getUTCMonth() > 0 ? this.getUTCMonth() + " 月" : "",
+					"d+": this.getUTCDate() > 1 ? (this.getUTCDate() - 1) + " 天" : "",
+					"h+": this.getUTCHours() > 0 ? this.getUTCHours() + " 小时" : "",
+					"m+": this.getUTCMinutes() > 0 ? this.getUTCMinutes() + " 分钟" : "",
+					"s+": this.getUTCSeconds() > 0 ? this.getUTCSeconds() + " 秒" : "",
+				};
+				for (let k in o) {
+					if (new RegExp("(" + k + ")").test(fmt)) {
+						fmt = fmt.replace(RegExp.$1, o[k]);
+					}
+				}
+				return fmt
+			}
+			let cur = new Date(t).format("y M d h m s")
+			return cur.toString()
+		}
+		function updateTime(){
+			let cur = new Date();
+			document.getElementById("tm").innerHTML = "现在时间：" + dateToString(cur);
+			document.getElementById("rem").innerHTML = "距离联合省选开始还有" + timeToString(Number(new Date("2023-4-1 8:30")) - Number(cur)) + "。";
+		}
+		setInterval(updateTime, 233);
+	</script>
+</body>
