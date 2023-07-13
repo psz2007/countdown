@@ -1,8 +1,9 @@
 <head>
-	<meta charset=utf-8>
+	<meta charset="utf-8">
 	<title>
-		联合省选倒计时
+		NOI2023 倒计时
 	</title>
+	<link rel="icon" href="data:;base64,=">
 </head>
 <body>
 	<div style="font-size: 3.6em; position: fixed; top: 0; bottom: 0; left: 0; right: 0;">
@@ -54,14 +55,13 @@
 			let cur = new Date(t).format("y M d h m s");
 			return cur.toString();
 		}
-		const contestName = "联合省选", daysCount = 2;
-		const daysTime = [
+		const contestName = "NOI2023", daysCount = 2, daysTime = [
 			[
-				'2023-4-1 8:30:00',
-				'2023-4-1 13:30:00'
+				'2023-7-24 8:00:00',
+				'2023-7-24 13:00:00'
 			],[
-				'2023-4-2 8:30:00',
-				'2023-4-2 13:30:00'
+				'2023-7-26 8:00:00',
+				'2023-7-26 13:00:00'
 			]
 		];
 		function timeToNumber(t) {
@@ -89,7 +89,7 @@
 				}
 			} catch(e) {
 				console.log(e);
-				rem = "目前无法进行任何操作。";
+				rem = contestName + " 已结束。";
 			}
 			document.getElementById("rem").innerHTML = rem; 
 		}
